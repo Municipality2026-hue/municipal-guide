@@ -1,0 +1,17 @@
+{
+  "name": "دليل الخدمات البلدية – بلدية السويق",
+  "short_name": "دليل البلدية",
+  "description": "دليل تفاعلي للخدمات والاشتراطات البلدية في السويق",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html?version=13",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#f2f7f3",
+  "theme_color": "#0a5c45",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
