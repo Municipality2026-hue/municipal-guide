@@ -4,7 +4,7 @@
   "description": "دليل تفاعلي للخدمات والاشتراطات البلدية في السويق",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./index.html?version=13",
+  "start_url": "./index.html?version=17",
   "scope": "./",
   "display": "fullscreen",
   "orientation": "portrait",

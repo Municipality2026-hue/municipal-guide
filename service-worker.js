@@ -1,9 +1,11 @@
-const CACHE_NAME = 'alsuwaiq-municipal-guide-v13';
+const CACHE_NAME = 'alsuwaiq-municipal-guide-v17';
 const OFFLINE_FILES = [
   './',
   './index.html',
   './manifest.webmanifest',
   './offline.html',
+  './pesticide-home-form.png',
+  './pesticide-form-qr.svg',
   './icons/icon-192.png',
   './icons/icon-512.png'
 ];
