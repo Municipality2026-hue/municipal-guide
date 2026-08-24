@@ -1296,7 +1296,7 @@ for (const [kind, activities] of Object.entries(REVIEWED_REQUIREMENTS)) {
 
 const versionBadge = document.createElement('span');
 versionBadge.className = 'site-version-badge';
-versionBadge.textContent = 'الإصدار ٢٧ — باركود ومعاينة الاستمارة';
+versionBadge.textContent = 'الإصدار ٢٨ — استمارة المقهى المصورة';
 document.body.appendChild(versionBadge);
 
 const FOOD_SURVEILLANCE_REQUIREMENT =
@@ -1918,7 +1918,7 @@ body{background:#e9f0ed}.shell{width:min(100%,1080px);min-height:100vh;margin:0 
   FORM_CONFIG.rodent.qr='rodent-control-qr.png';
   FORM_CONFIG.pesticide.url='https://municipality2026-hue.github.io/municipal-guide/home-pesticide-request.png';
   FORM_CONFIG.pesticide.qr='home-pesticide-qr.png';
-  FORM_CONFIG.mobile.url='https://municipality2026-hue.github.io/municipal-guide/mobile-cafe-license.docx';
+  FORM_CONFIG.mobile.url='https://municipality2026-hue.github.io/municipal-guide/mobile-cafe-request.png';
   FORM_CONFIG.mobile.qr='mobile-cafe-qr.png';
   function formUrl(id){return FORM_CONFIG[id].url}
   window.downloadDisplayedForm=function(id){
@@ -1950,8 +1950,10 @@ body{background:#e9f0ed}.shell{width:min(100%,1080px);min-height:100vh;margin:0 
   const originalMobile=window.openMobile;
   window.openMobile=function(){
     originalMobile();
-    const detail=view.querySelector('.detail');
-    if(detail&&!detail.querySelector('[data-form-share="mobile"]'))detail.insertAdjacentHTML('beforeend',`<section class="mobile-form-share"><div class="mobile-form-share-copy"><h3>حمّل استمارة المقهى المتنقل على هاتفك</h3><p>امسح الباركود لفتح الاستمارة مباشرة، ثم اضغط زر التحميل لحفظ ملف Word على الهاتف.</p></div>${shareCard('mobile')}</section>`);
+    const qrImage=view.querySelector('.qr img');
+    if(qrImage){qrImage.src=FORM_CONFIG.mobile.qr;qrImage.alt='باركود استمارة المقهى المتنقل';}
+    const previewImage=view.querySelector('#mobileFormPreview img');
+    if(previewImage){previewImage.src=FORM_CONFIG.mobile.url;previewImage.alt='استمارة ترخيص المقهى المتنقل';}
   };
   function openDeepLinkedForm(){
     const id=new URLSearchParams(location.search).get('form');
