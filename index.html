@@ -348,7 +348,10 @@ if (rentalDocumentation) {
   rentalDocumentation.docs = [
     'البطاقات الشخصية للطرفين.',
     'الوكالات الشرعية مع الإعلام الشرعي.',
-    'السجل التجاري للشركات.'
+    'السجل التجاري للشركات.',
+    'استمارة عقد الإيجار موقعة من المؤجر والمستأجر.',
+    'إثبات التملك (الملكية) والرسم المساحي.',
+    'في حالة التجديد: أصل عقد الإيجار للعقار، بالإضافة إلى الترخيص البلدي.'
   ];
 }
 const rentalCancellation = DATA.rentals.find(item => item.name.includes('إلغاء عقد الإيجار'));
@@ -360,7 +363,8 @@ if (rentalCancellation) {
   );
   rentalCancellation.docs = [
     'البطاقات الشخصية للطرفين.',
-    'أصل عقد الإيجار المعتمد من دائرة البلدية.'
+    'أصل عقد الإيجار المعتمد من دائرة البلدية.',
+    'استمارة فسخ عقد الإيجار موقعة من المؤجر والمستأجر.'
   ];
 }
 DATA.rentals = DATA.rentals.filter(item => !item.name.includes('طلب تسجيل المبنى لعقد الإيجار'));
@@ -1301,7 +1305,7 @@ for (const [kind, activities] of Object.entries(REVIEWED_REQUIREMENTS)) {
 
 const versionBadge = document.createElement('span');
 versionBadge.className = 'site-version-badge';
-versionBadge.textContent = 'الإصدار ٣٧ — تصحيح وصف الأنشطة الغذائية';
+versionBadge.textContent = 'الإصدار ٤١ — تدقيق مستندات عقد الإيجار';
 document.body.appendChild(versionBadge);
 
 const FOOD_SURVEILLANCE_REQUIREMENT =
