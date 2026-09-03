@@ -1,0 +1,68 @@
+name: Publish municipal guide version 41
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-version-41.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply version 41
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          old_docs = """  rentalDocumentation.docs = [
+              'البطاقات الشخصية للطرفين.',
+              'الوكالات الشرعية مع الإعلام الشرعي.',
+              'السجل التجاري للشركات.'
+            ];"""
+          version_41_docs = """  rentalDocumentation.docs = [
+              'البطاقات الشخصية للطرفين.',
+              'الوكالات الشرعية مع الإعلام الشرعي.',
+              'السجل التجاري للشركات.',
+              'استمارة عقد الإيجار موقعة من المؤجر والمستأجر.',
+              'إثبات التملك (الملكية) والرسم المساحي.',
+              'في حالة التجديد: أصل عقد الإيجار للعقار، بالإضافة إلى الترخيص البلدي.'
+            ];"""
+          if version_41_docs not in text:
+              if old_docs not in text:
+                  raise SystemExit("Rental documentation source was not found")
+              text = text.replace(old_docs, version_41_docs, 1)
+
+          old_cancel = """  rentalCancellation.docs = [
+              'البطاقات الشخصية للطرفين.',
+              'أصل عقد الإيجار المعتمد من دائرة البلدية.'
+            ];"""
+          version_41_cancel = """  rentalCancellation.docs = [
+              'البطاقات الشخصية للطرفين.',
+              'أصل عقد الإيجار المعتمد من دائرة البلدية.',
+              'استمارة فسخ عقد الإيجار موقعة من المؤجر والمستأجر.'
+            ];"""
+          if version_41_cancel not in text:
+              if old_cancel not in text:
+                  raise SystemExit("Rental cancellation source was not found")
+              text = text.replace(old_cancel, version_41_cancel, 1)
+
+          text = text.replace("الإصدار ٣٧ — تصحيح وصف الأنشطة الغذائية", "الإصدار ٤١ — تدقيق مستندات عقد الإيجار", 1)
+          path.write_text(text, encoding="utf-8")
+      - name: Verify and commit
+        run: |
+          grep -F "الإصدار ٤١ — تدقيق مستندات عقد الإيجار" index.html
+          grep -F "إثبات التملك (الملكية) والرسم المساحي." index.html
+          grep -F "استمارة فسخ عقد الإيجار موقعة من المؤجر والمستأجر." index.html
+          git config user.name "Municipality Guide Publisher"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "نشر الإصدار 41 من دليل البلدية"
+          git push
