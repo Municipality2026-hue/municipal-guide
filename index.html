@@ -351,6 +351,8 @@ if (rentalDocumentation) {
     'السجل التجاري للشركات.',
     'استمارة عقد الإيجار موقعة من المؤجر والمستأجر.',
     'إثبات التملك (الملكية) والرسم المساحي.',
+    'مخالصة عقد إيجار في حال كان العقار مؤجرًا سابقًا.',
+    'شهادة إتمام بناء في حال لم يسبق تأجير العقار.',
     'في حالة التجديد: أصل عقد الإيجار للعقار، بالإضافة إلى الترخيص البلدي.'
   ];
 }
@@ -363,6 +365,7 @@ if (rentalCancellation) {
   );
   rentalCancellation.docs = [
     'البطاقات الشخصية للطرفين.',
+    'الوكالات الشرعية.',
     'أصل عقد الإيجار المعتمد من دائرة البلدية.',
     'استمارة فسخ عقد الإيجار موقعة من المؤجر والمستأجر.'
   ];
@@ -1305,7 +1308,7 @@ for (const [kind, activities] of Object.entries(REVIEWED_REQUIREMENTS)) {
 
 const versionBadge = document.createElement('span');
 versionBadge.className = 'site-version-badge';
-versionBadge.textContent = 'الإصدار ٤١ — تدقيق مستندات عقد الإيجار';
+versionBadge.textContent = 'الإصدار ٤٤ — استكمال مستندات توثيق عقد الإيجار';
 document.body.appendChild(versionBadge);
 
 const FOOD_SURVEILLANCE_REQUIREMENT =
