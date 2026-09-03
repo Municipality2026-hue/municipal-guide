@@ -1301,7 +1301,7 @@ for (const [kind, activities] of Object.entries(REVIEWED_REQUIREMENTS)) {
 
 const versionBadge = document.createElement('span');
 versionBadge.className = 'site-version-badge';
-versionBadge.textContent = 'الإصدار ٣٦ — تحديث وصف الأنشطة الغذائية';
+versionBadge.textContent = 'الإصدار ٣٧ — تصحيح وصف الأنشطة الغذائية';
 document.body.appendChild(versionBadge);
 
 const FOOD_SURVEILLANCE_REQUIREMENT =
@@ -1335,6 +1335,11 @@ openActivities = function (kind) {
   const grid = view.querySelector('.category-grid');
   const head = view.querySelector('.page-head');
   if (!grid || !head || head.querySelector('[data-general-requirements-button]')) return;
+  const intro = head.querySelector('p');
+  if (kind === 'food' && intro) {
+    intro.textContent = 'تم التركيز على الأنشطة الأكثر شيوعًا وطلبًا. وللاستفسار عن الأنشطة غير المذكورة، يرجى مراجعة قسم الرقابة والتراخيص الغذائية.';
+    intro.style.color = '#7a858d';
+  }
   head.classList.add('activities-page-head');
   const copy = document.createElement('div');
   while (head.firstChild) copy.appendChild(head.firstChild);
