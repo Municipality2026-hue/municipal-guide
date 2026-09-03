@@ -786,7 +786,7 @@ function openHealthServiceInTajawob(select){
   if(!select.value) return;
   window.location.href='https://tajawob.om/#/home';
 }
-function openActivities(kind){let arr=kind==='food'?DATA.food:DATA.health,title=kind==='food'?'الأنشطة الغذائية':'الأنشطة الصحية وذات الصلة بالصحة العامة';hideHome();view.innerHTML=crumbs(title)+`<div class="page-head"><h2>${title}</h2><p>اختر النشاط لعرض الاشتراطات الصحية. المستند المطلوب لهذه الأنشطة هو عقد الإيجار.</p></div>${kind==='health'?`<div class="health-path-switch"><button class="active">الأنشطة الصحية</button><button onclick="openHealthServices()">خدمات الرقابة الصحية</button></div>`:''}<div class="category-grid">${arr.map((a,i)=>`<button class="cat" onclick="openActivity('${kind}',${i})"><div class="cat-head">${activityIcon(kind)}<h3>${a.name}</h3></div><p>اشتراطات صحية خاصة بالنشاط</p><span class="pill">عرض الاشتراطات</span></button>`).join('')}${kind==='food'?`<button class="cat" onclick="openMobile()"><div class="cat-head">${uiIcon('mobile','heading-svg')}<h3>مقهى متنقل</h3></div><p>المستندات والاستمارة والاشتراطات الخاصة بالنشاط</p><span class="pill">عرض التفاصيل</span></button>`:''}</div>`}
+function openActivities(kind){let arr=kind==='food'?DATA.food:DATA.health,title=kind==='food'?'الأنشطة الغذائية':'الأنشطة الصحية وذات الصلة بالصحة العامة';hideHome();view.innerHTML=crumbs(title)+`<div class="page-head"><h2>${title}</h2>${kind==='food'?'<p style="color:#7a858d">تم التركيز على الأنشطة الأكثر شيوعًا وطلبًا. وللاستفسار عن الأنشطة غير المذكورة، يرجى مراجعة قسم الرقابة والتراخيص الغذائية.</p>':'<p>اختر النشاط لعرض الاشتراطات الصحية. المستند المطلوب لهذه الأنشطة هو عقد الإيجار.</p>'}</div>${kind==='health'?`<div class="health-path-switch"><button class="active">الأنشطة الصحية</button><button onclick="openHealthServices()">خدمات الرقابة الصحية</button></div>`:''}<div class="category-grid">${arr.map((a,i)=>`<button class="cat" onclick="openActivity('${kind}',${i})"><div class="cat-head">${activityIcon(kind)}<h3>${a.name}</h3></div><p>اشتراطات صحية خاصة بالنشاط</p><span class="pill">عرض الاشتراطات</span></button>`).join('')}${kind==='food'?`<button class="cat" onclick="openMobile()"><div class="cat-head">${uiIcon('mobile','heading-svg')}<h3>مقهى متنقل</h3></div><p>المستندات والاستمارة والاشتراطات الخاصة بالنشاط</p><span class="pill">عرض التفاصيل</span></button>`:''}</div>`}
 function renderActivityRequirement(item,kind){
  const isGeneralRequirement=item.includes('استيفاء الاشتراطات الصحية العامة');
  if(!isGeneralRequirement) return `<div class="req">${item}</div>`;
@@ -1301,7 +1301,7 @@ for (const [kind, activities] of Object.entries(REVIEWED_REQUIREMENTS)) {
 
 const versionBadge = document.createElement('span');
 versionBadge.className = 'site-version-badge';
-versionBadge.textContent = 'الإصدار ٣٣ — تحديث اشتراطات المقاهي المتنقلة';
+versionBadge.textContent = 'الإصدار ٣٦ — تحديث وصف الأنشطة الغذائية';
 document.body.appendChild(versionBadge);
 
 const FOOD_SURVEILLANCE_REQUIREMENT =
