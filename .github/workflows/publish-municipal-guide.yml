@@ -1,0 +1,84 @@
+name: Publish municipal guide updates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-municipal-guide.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply approved updates
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          def replace_once(old, new, label):
+              global text
+              if new in text:
+                  return
+              if old not in text:
+                  raise SystemExit(f"Required source not found: {label}")
+              text = text.replace(old, new, 1)
+
+          replace_once(
+              ".alert{background:#fff6df;border:1px solid #ead39d;color:#6c531d;border-radius:16px;padding:15px}.qr{",
+              ".alert{background:#fff6df;border:1px solid #ead39d;color:#6c531d;border-radius:16px;padding:15px}.food-review-notice{margin-top:16px;background:#fff3e8;border:2px solid #e59a4a;border-radius:16px;padding:16px 18px;color:#7a3f0e;font-weight:700;line-height:1.9;box-shadow:0 5px 16px rgba(193,105,29,.1)}.qr{",
+              "food notice style",
+          )
+
+          activity_anchor = " let specificRequirements=(typeof REVIEWED_REQUIREMENTS!=='undefined'&&REVIEWED_REQUIREMENTS[kind]&&REVIEWED_REQUIREMENTS[kind][a.name])?REVIEWED_REQUIREMENTS[kind][a.name]:a.req;\n if(kind==='food'&&!specificRequirements.some(item=>item.includes('كاميرات مراقبة'))){specificRequirements=[...specificRequirements,FOOD_SURVEILLANCE_REQUIREMENT]}\n"
+          activity_rules = activity_anchor + """ if(kind==='food'&&a.name==='بيع وشواء الأسماك'&&!specificRequirements.some(item=>item.includes('وزارة الثروة الزراعية والسمكية وموارد المياه'))){specificRequirements=['موافقة وزارة الثروة الزراعية والسمكية وموارد المياه على النشاط.',...specificRequirements]}
+           const SKETCH_REQUIREMENT='ضرورة إرفاق سكتش (مخطط) للمنشأة موضحًا به المساحات والتقسيمات الداخلية للمنشأة.';
+           if(kind==='food'&&a.name!=='محل بيع مواد غذائية'&&!specificRequirements.some(item=>item.includes('إرفاق سكتش (مخطط)'))){specificRequirements=[...specificRequirements,SKETCH_REQUIREMENT]}
+           if(kind==='health'&&['تصفيف الشعر والتجميل للنساء','حلاقة الرجال'].includes(a.name)&&!specificRequirements.some(item=>item.includes('إرفاق سكتش (مخطط)'))){specificRequirements=[...specificRequirements,SKETCH_REQUIREMENT]}
+          """
+          replace_once(activity_anchor, activity_rules, "activity requirements")
+
+          old_detail = "${a.source?`<p class=\"source-note\">المرجع: ${a.source}</p>`:(legalUpdate?'<p class=\"source-note\">المشاوي: المواد (٤٤–٤٦). الأسماك: المواد (١٢٥–١٢٧) من القرار الوزاري رقم ٢٩/٢٠١٦.</p>':'')}</div>"
+          new_detail = "${a.source?`<p class=\"source-note\">المرجع: ${a.source}</p>`:(legalUpdate?'<p class=\"source-note\">المشاوي: المواد (٤٤–٤٦). الأسماك: المواد (١٢٥–١٢٧) من القرار الوزاري رقم ٢٩/٢٠١٦.</p>':'')}${kind==='food'?'<div class=\"food-review-notice\">يرجى التكرم بمراجعة قسم الرقابة والتراخيص الغذائية قبل البدء في تنفيذ أي أعمال أو تعديلات على الموقع؛ وذلك للتنسيق بشأن الاشتراطات والمتطلبات الواجب استيفاؤها.</div>':''}</div>"
+          replace_once(old_detail, new_detail, "food review notice")
+
+          mobile_old = "</div></div></div></div>`}\nfunction openLease()"
+          mobile_new = "</div></div></div></div>`;const mobileConditions=view.querySelector('.rows .row:nth-child(2) .value');if(mobileConditions){const mobileConditionsList=mobileConditions.querySelector('ul');if(mobileConditionsList){mobileConditionsList.insertAdjacentHTML('beforeend','<li>صورة أو رسوم فوتوغرافية (ثلاثية الأبعاد) تعكس الشكل الخارجي الذي ستكون عليه المركبة.</li>')}mobileConditions.insertAdjacentHTML('beforeend','<div class=\"food-review-notice\">يرجى التكرم بمراجعة قسم الرقابة والتراخيص الغذائية قبل البدء في تنفيذ أي أعمال أو تعديلات على الموقع؛ وذلك للتنسيق بشأن الاشتراطات والمتطلبات الواجب استيفاؤها.</div>')}}\nfunction openLease()"
+          replace_once(mobile_old, mobile_new, "mobile cafe requirements")
+
+          fish_anchor = "    'بيع وشواء الأسماك': [\n"
+          replace_once(fish_anchor, fish_anchor + "      'موافقة وزارة الثروة الزراعية والسمكية وموارد المياه على النشاط.',\n", "fish approval")
+
+          old_intro = '<div class="page-head"><h2>${title}</h2><p>اختر النشاط لعرض الاشتراطات الصحية. المستند المطلوب لهذه الأنشطة هو عقد الإيجار.</p></div>'
+          new_intro = '<div class="page-head"><h2>${title}</h2>${kind===\'food\'?\'<p style="color:#7a858d">تم التركيز على الأنشطة الأكثر شيوعًا وطلبًا. وللاستفسار عن الأنشطة غير المذكورة، يرجى مراجعة قسم الرقابة والتراخيص الغذائية.</p>\':\'<p>اختر النشاط لعرض الاشتراطات الصحية. المستند المطلوب لهذه الأنشطة هو عقد الإيجار.</p>\'}</div>'
+          replace_once(old_intro, new_intro, "food introduction")
+
+          if "versionBadge.textContent = 'الإصدار ٣٧ — تصحيح وصف الأنشطة الغذائية';" not in text:
+              text = text.replace("versionBadge.textContent = 'الإصدار ٢٨ — استمارة المقهى المصورة';", "versionBadge.textContent = 'الإصدار ٣٧ — تصحيح وصف الأنشطة الغذائية';", 1)
+              text = text.replace("versionBadge.textContent = 'الإصدار ٣٣ — تحديث اشتراطات المقاهي المتنقلة';", "versionBadge.textContent = 'الإصدار ٣٧ — تصحيح وصف الأنشطة الغذائية';", 1)
+
+          guard_anchor = "  if (!grid || !head || head.querySelector('[data-general-requirements-button]')) return;\n"
+          guard_new = guard_anchor + """  const intro = head.querySelector('p');
+            if (kind === 'food' && intro) {
+              intro.textContent = 'تم التركيز على الأنشطة الأكثر شيوعًا وطلبًا. وللاستفسار عن الأنشطة غير المذكورة، يرجى مراجعة قسم الرقابة والتراخيص الغذائية.';
+              intro.style.color = '#7a858d';
+            }
+          """
+          replace_once(guard_anchor, guard_new, "final food description guard")
+
+          path.write_text(text, encoding="utf-8")
+      - name: Commit published version
+        run: |
+          git config user.name "Municipality Guide Publisher"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "نشر الإصدار 37 وتصحيح وصف الأنشطة الغذائية"
+          git push
